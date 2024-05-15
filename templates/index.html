@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Calare - front page</title>
+
+	<link rel="stylesheet" href="/static/main.css" />
+</head>
+<body>
+	<h1>Calare - booking calendar</h1>
+	<p>This is Calare</p>
+	<p>Features:</p>
+	<ul>
+		{% for feature in features %}
+		<li>{{ feature }}</li>
+		{% endfor %}
+	</ul>
+</body>
+</html>
