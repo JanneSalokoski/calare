@@ -2,15 +2,15 @@
 
 Calare is a calendar system for booking resources, for example meeting rooms or equipment.
 
-Current version is 0.0.0.
+Current version is 0.0.0. See changelog.md for more information.
 
 ## Features
 
 Main features of Calare are:
-- Easily add and customize _resources_
-- Group resources into _collections_
-- _View_ the _bookings_ of a resource or a collection
-- Restrict the access of what information each _user_ can see with _access groups_
+- Easily add and customize [resources](#resources)
+- Group resources into [collections](#collections)
+- [View](#views) the [bookings](#bookings) of a resource or a collection
+- Restrict the access of what information each [user](#users) can see with [access groups](#access-groups)
 - Print out a _contract_ for a booking
 
 ### Resources
@@ -69,7 +69,7 @@ by the owners of the resource and printed as a pdf-file to signed.
 
 ## Feature completion
 
-- [ ] Backend
+- Backend
     - [ ] Database for storing information
     - [ ] Authentication
     - [ ] Creating and modifying bookings
@@ -78,7 +78,7 @@ by the owners of the resource and printed as a pdf-file to signed.
     - [ ] Creating and modifying users
     - [ ] Creating and modifying access groups
     - [ ] Creating and modifying contracts
-- [ ] User interface
+- User interface
     - [ ] Resource view
         - [ ] Day view
         - [ ] Week view
@@ -90,7 +90,7 @@ by the owners of the resource and printed as a pdf-file to signed.
     - [ ] Booking view
     - [ ] User view
     - [ ] Admin view
-- [ ] Other
+- Other
     - [ ] Installation package
     - [ ] Installation guide
     - [ ] Usage manual
