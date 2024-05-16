@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Calare - edit booking</title>
+
+	<link rel="stylesheet" href="/static/main.css" />
+</head>
+<body>
+	<h1>Calare - booking calendar</h1>
+	<form action="/update_booking" method="POST"> 
+		<h2>{{page_title}}</h2>
+
+		<input type="hidden" name="id" value="{{id}}" />
+
+		<label for="title">Title:</label>
+		<input type="text" id="title" name="title" placeholder="Booking title" value="{{title}}" />
+
+		<br>
+
+		<label for="user">User:</label>
+		<input type="text" id="user" name="user" placeholder="Who is booking this" value="{{user}}" />
+
+		<br>
+
+		<label for="start">Start time:</label>
+		<input type="datetime-local" id="start" name="start" placeholder="" value="{{start}}"/>
+
+		<br>
+
+		<label for="end">End time:</label>
+		<input type="datetime-local" id="end" name="end" placeholder="" value="{{end}}" />
+
+		<br>
+
+		<label for="description">Description:</label>
+		<textarea id="description" name="description"
+			placeholder="Additional information" rows="3" cols="50", value="{{description}}"></textarea>
+
+		<br>
+
+		<label for="resources">Resources:</label>
+		{% for resource in resources %}
+		<input type="checkbox" name="resources" value="{{resource[1].id}}" {{resource[0]}}>{{resource[1].name}}</input>
+		{% endfor %}
+
+		<br>
+
+		<input type="submit" value="Create a booking" />
+	</form>
+</body>
+</html>
