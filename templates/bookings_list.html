@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Calare - bookings</title>
+
+	<link rel="stylesheet" href="/static/main.css" />
+</head>
+<body>
+	<h1>Calare - bookings</h1>
+	<div class="BookingList">
+		<div class="header">
+			<span class="item">Title</span>
+			<span class="item">Description</span>
+			<span class="item">Start</span>
+			<span class="item">End</span>
+			<span class="item">Edit</span>
+		</div>
+		{% for booking in bookings %}
+		<div class="row">
+			<span class="item">{{booking.title}}</span>
+			<span class="item">{{booking.description}}</span>
+			<input class="item" type="datetime-local" value="{{booking.start}}" readonly />
+			<input class="item" type="datetime-local" value="{{booking.end}}" readonly />
+			<a class="item" href="/bookings/edit/{{booking.id}}">edit</a>
+		</div>
+		{% endfor %}
+	</div>
+	<a href="/bookings/edit/">New booking</a>
+</body>
+</html>

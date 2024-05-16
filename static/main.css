@@ -5,3 +5,20 @@ body {
 	height: calc(100vh - var(--padding)*2);
 	padding: var(--padding);
 }
+
+.BookingList {
+	max-width: 40em;
+
+	display: grid;
+	grid-template-columns: repeat(5, auto);
+
+	gap: 0.5em;
+
+	.header, .row {
+		display: contents;
+	}
+
+	.header .item {
+		font-weight: 600;
+	}
+}

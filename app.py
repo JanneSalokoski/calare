@@ -39,7 +39,7 @@ resources = [
 class Booking:
     bookings = {}
 
-    def __init__(self, booking_id="", title="", user="",
+    def __init__(self, booking_id=0, title="", user="",
                  description="", start="", end="", resources=None):
 
         self.id = booking_id
@@ -67,28 +67,52 @@ class Booking:
         id = len(dict.keys(Booking.bookings))
         booking = Booking(id, title, user, description, start, end, resources)
         Booking.bookings[id] = booking
+
         return booking
 
-@app.route("/edit_booking")
+@app.route("/bookings")
+def bookings_list():
+    return render_template("bookings_list.html",
+        bookings=dict.values(Booking.bookings))
+
+
+@app.route("/bookings/edit/")
 def edit_booking():
     booking = Booking()
-    return render_template("edit_booking.html", page_title="Create new booking", id=booking.id, title=booking.id,
-                           user=booking.user, description=booking.description,
-                           start=booking.start, end=booking.end, resources=booking.get_resource_list())
+    return render_template("edit_booking.html",
+        page_title="Create new booking", id=booking.id, title=booking.id,
+        user=booking.user, description=booking.description,
+        start=booking.start, end=booking.end,
+        resources=booking.get_resource_list())
 
-@app.route("/update_booking", methods=["POST"])
+@app.route("/bookings/edit/<id>")
+def edit_booking_with_id(id):
+    id = int(id)
+    if id in Booking.bookings:
+        booking = Booking.bookings[id]
+        return render_template("edit_booking.html",
+            page_title="Modify booking", id=booking.id, title=booking.title,
+            user=booking.user, description=booking.description,
+            start=booking.start, end=booking.end,
+            resources=booking.get_resource_list())
+
+    return "Booking not found<br><a href='/bookings'>List of bookings</a>", 404
+
+@app.route("/bookings/update", methods=["POST"])
 def update_booking():
-    if request.form["id"] not in Booking.bookings:
-        Booking.create(request.form["title"], request.form["user"], request.form["description"],
-                        request.form["start"], request.form["end"], request.form["resources"])
+    id = int(request.form["id"])
+    if id not in Booking.bookings:
+        Booking.create(request.form["title"], request.form["user"],
+            request.form["description"], request.form["start"],
+            request.form["end"], request.form["resources"])
     else:
-        Booking.bookings[request.form["id"]] = Booking(
+        Booking.bookings[id] = Booking(
                 request.form["id"], request.form["title"],
                 request.form["user"], request.form["description"],
                 request.form["start"], request.form["end"],
                 request.form["resources"])
 
-    return "Success!"
+    return "Success!<br><a href='/bookings'>List of bookings</a>"
 
 
 
