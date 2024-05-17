@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Calare - login success</title>
+
+	<link rel="stylesheet" href="/static/main.css" />
+</head>
+<body>
+	<h1>Calare - resources</h1>
+	<div class="ResourceList"
+	{% for resource in resources %}
+	<div class="resource">
+		<span class="item name">{{resource.uuid}}</span>
+		<span class="item name">{{resource.name}}</span>
+	</div>
+	{% endfor %}
+</body>
+</html>

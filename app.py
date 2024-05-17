@@ -1,10 +1,13 @@
 """ app.py - Provide server backend for Calare """
 
 from dataclasses import dataclass
-
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///calare"
+db = SQLAlchemy(app)
 
 @app.route("/")
 def index():
@@ -92,9 +95,12 @@ class Booking:
 
         return booking
 
+
 @app.route("/bookings")
 def bookings_list():
     """Serve a list of all the bookings"""
+
+
     return render_template("bookings_list.html",
         bookings=dict.values(Booking.bookings))
 
@@ -142,3 +148,14 @@ def update_booking():
                 request.form["resources"])
 
     return "Success!<br><a href='/bookings'>List of bookings</a>"
+
+@app.route("/resources/")
+def list_resources():
+    res = db.session.execute(text("SELECT uuid_id, name FROM resources"))
+    resources = res.fetchall()
+
+    print(resources)
+
+    return render_template("resources.html", resources=resources)
+
+
