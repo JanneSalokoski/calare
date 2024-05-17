@@ -152,9 +152,8 @@ def update_booking():
 @app.route("/resources/")
 def list_resources():
     res = db.session.execute(text("SELECT uuid_id, name FROM resources"))
-    resources = res.fetchall()
-
-    print(resources)
+    resources = [{'name': x.name, 'uuid_display': str(x.uuid_id)[:6],
+                  'uuid': str(x.uuid_id)} for x in res.fetchall()]
 
     return render_template("resources.html", resources=resources)
 

@@ -4,6 +4,8 @@ body {
 	width: calc(100vw - var(--padding)*2);
 	height: calc(100vh - var(--padding)*2);
 	padding: var(--padding);
+
+	line-height: 1.25rem;
 }
 
 .BookingList {
@@ -22,3 +24,32 @@ body {
 		font-weight: 600;
 	}
 }
+
+span.uuid {
+	--padding: 0.25rem;
+
+	font-family: monospace;
+	font-size: 100%;
+
+	height: calc(100% - 0.2rem);
+	width: calc(5ch + (var(--padding)*2));
+	padding-inline: var(--padding);
+
+	margin-top: 0.1rem;
+	margin-bottom: 0.1rem;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	border: 1px solid black;
+	border-radius: 2px;
+
+	background-color: lightcoral;
+}
+
+span.name {
+	height: 1rem;
+}
+
+
