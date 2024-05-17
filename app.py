@@ -100,35 +100,42 @@ class Booking:
 def bookings_list():
     """Serve a list of all the bookings"""
 
+    query = text("SELECT uuid_id, title FROM bookings")
+    res = db.session.execute(query).fetchall()
+
+    print(res)
 
     return render_template("bookings_list.html",
-        bookings=dict.values(Booking.bookings))
+        bookings=res)
 
 
 @app.route("/bookings/edit/")
-def edit_booking():
-    """Edit a booking
+def new_booking():
+    """Create a new booking"""
 
-    Because there is no id, this means creating a new one
-    """
-    booking = Booking()
     return render_template("edit_booking.html",
-        page_title="Create new booking", id=booking.id, title=booking.id,
-        user=booking.user, description=booking.description,
-        start=booking.start, end=booking.end,
-        resources=booking.get_resource_list())
+        page_title="Create new booking", id="", title="",
+        user="", description="", start="", end="", resources=[])
 
 @app.route("/bookings/edit/<booking_id>")
 def edit_booking_with_id(booking_id):
     """Edit the booking with the id"""
-    booking_id = int(booking_id)
-    if booking_id in Booking.bookings:
-        booking = Booking.bookings[booking_id]
-        return render_template("edit_booking.html",
-            page_title="Modify booking", id=booking.id, title=booking.title,
-            user=booking.user, description=booking.description,
-            start=booking.start, end=booking.end,
-            resources=booking.get_resource_list())
+
+    query = text("SELECT uuid_id, title, description, user, start_time, end_time, resource_id FROM bookings WHERE uuid_id=:id")
+    res = db.session.execute(query, {"id": booking_id})
+    x = res.fetchone()
+    booking = {'uuid_display': str(x.uuid_id)[:6],
+                'uuid_id': str(x.uuid_id),
+                'title': x.title,
+                'description': x.description,
+                'user': x.user,
+                'start_time': x.start_time,
+                'end_time': x.end_time,
+                'resources': [] # Resources are broken and need a new database-table anyway
+                }
+
+    return render_template("edit_booking.html",
+        page_title="Modify booking", booking=booking)
 
     return "Booking not found<br><a href='/bookings'>List of bookings</a>", 404
 
