@@ -5,9 +5,16 @@ from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 
+from result import Result, Ok, Err
+
+from db import DataBase
+from resource import Resource, Resources
+
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///calare"
-db = SQLAlchemy(app)
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///calare"
+#db = SQLAlchemy(app)
+
+database = DataBase(app)
 
 @app.route("/")
 def index():
@@ -178,12 +185,9 @@ def update_booking():
 
     return "Success!<br><a href='/bookings'>List of bookings</a>"
 
+resources = Resources(database)
+
 @app.route("/resources/")
-def list_resources():
-    res = db.session.execute(text("SELECT uuid_id, name FROM resources"))
-    resources = [{'name': x.name, 'uuid_display': str(x.uuid_id)[:6],
-                  'uuid': str(x.uuid_id)} for x in res.fetchall()]
-
-    return render_template("resources.html", resources=resources)
-
+def serve_resources():
+    return render_template("resources.html", resources=resources.list())
 

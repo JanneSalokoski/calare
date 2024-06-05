@@ -12,7 +12,7 @@
 	<div class="ResourceList"
 	{% for resource in resources %}
 	<div class="resource">
-		<span class="item uuid" title="{{resource.uuid}}" onclick="copy_text('{{resource.uuid}}')">{{resource.uuid_display}}</span>
+		<span class="item uuid" title="{{resource.uuid_full}}" onclick="copy_text('{{resource.uuid_full}}')">{{resource.uuid}}</span>
 		<span class="item name">{{resource.name}}</span>
 	</div>
 	{% endfor %}
