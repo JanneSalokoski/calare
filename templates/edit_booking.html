@@ -41,8 +41,8 @@
 		<br>
 
 		<label for="resources">Resources:</label>
-		{% for resource in resources %}
-		<input type="checkbox" name="resources" value="{{resource[1].id}}" {{resource[0]}}>{{resource[1].name}}</input>
+		{% for resource in booking.resources %}
+		<input type="checkbox" name="resources" value="{{resource.uuid_id}}" {{resource.checked}}>{{resource.name}}</input>
 		{% endfor %}
 
 		<br>

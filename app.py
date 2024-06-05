@@ -121,9 +121,31 @@ def new_booking():
 def edit_booking_with_id(booking_id):
     """Edit the booking with the id"""
 
-    query = text("SELECT uuid_id, title, description, user, start_time, end_time, resource_id FROM bookings WHERE uuid_id=:id")
+    query = text("SELECT serial_id, uuid_id, title, description, user, start_time, end_time FROM bookings WHERE uuid_id=:id")
     res = db.session.execute(query, {"id": booking_id})
     x = res.fetchone()
+
+    print(x.serial_id)
+
+    query = text("SELECT resources.name FROM resource_bookings JOIN resources ON resources.serial_id=resource_bookings.resource_id WHERE resource_bookings.booking_id=:id;")
+    res = db.session.execute(query, {"id": x.serial_id})
+    booked_resources = [ x.name for x in res.fetchall()]
+
+    query = text("SELECT uuid_id, name FROM resources")
+    res = db.session.execute(query)
+    resource_ids = res.fetchall()
+
+    # There probably is a way to combine the last two queries: select all resource.name,
+    # join with result of is resource.sreial_id in the booking_id
+
+    print(booked_resources)
+
+    resources = [{'uuid_id': str(x.uuid_id), 'name': x.name,
+                  'checked': 'checked' if x.name in booked_resources else ''}
+                 for x in resource_ids]
+
+    print(resources)
+
     booking = {'uuid_display': str(x.uuid_id)[:6],
                 'uuid_id': str(x.uuid_id),
                 'title': x.title,
@@ -131,7 +153,7 @@ def edit_booking_with_id(booking_id):
                 'user': x.user,
                 'start_time': x.start_time,
                 'end_time': x.end_time,
-                'resources': [] # Resources are broken and need a new database-table anyway
+                'resources': resources # Resources are broken and need a new database-table anyway
                 }
 
     return render_template("edit_booking.html",

@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS resources 		CASCADE;
 DROP TABLE IF EXISTS access_groups 	CASCADE;
 DROP TABLE IF EXISTS users 			CASCADE;
 DROP TABLE IF EXISTS bookings 		CASCADE;
+DROP TABLE IF EXISTS resource_bookings CASCADE;
 
 CREATE TABLE collections (
 	serial_id 	SERIAL PRIMARY KEY,
@@ -46,7 +47,14 @@ CREATE TABLE bookings (
 	start_time 	TIMESTAMP NOT NULL,
 	end_time 	TIMESTAMP NOT NULL,
 
-	user_id 	INT NOT NULL REFERENCES users(serial_id),
+	user_id 	INT NOT NULL REFERENCES users(serial_id)
+);
+
+CREATE TABLE resource_bookings (
+	serial_id 	SERIAL PRIMARY KEY,
+	uuid_id 	UUID UNIQUE DEFAULT gen_random_uuid(),
+
+	booking_id 	INT NOT NULL REFERENCES bookings(serial_id),
 	resource_id INT NOT NULL REFERENCES resources(serial_id)
 );
 
@@ -78,7 +86,7 @@ VALUES
 	, ('Test', 	'password', (SELECT serial_id FROM access_groups WHERE name='User'))
 	;
 
-INSERT INTO bookings (title, description, start_time, end_time, user_id, resource_id)
+INSERT INTO bookings (title, description, start_time, end_time, user_id)
 VALUES
 	  (
 		'Event 1'
@@ -86,7 +94,6 @@ VALUES
 		, TIMESTAMP '2024-05-17 10:00:00'
 		, TIMESTAMP '2024-05-17 12:00:00'
 		, (SELECT serial_id FROM users WHERE name='Admin')
-		, (SELECT serial_id FROM resources WHERE name='Alina')
 	  )
 	  , (
 		'Event 2'
@@ -94,6 +101,12 @@ VALUES
 		, TIMESTAMP '2024-05-17 13:00:00'
 		, TIMESTAMP '2024-05-17 16:00:00'
 		, (SELECT serial_id FROM users WHERE name='Test')
-		, (SELECT serial_id FROM resources WHERE name='Groudon')
 	  )
 	;
+
+INSERT INTO resource_bookings (booking_id, resource_id)
+VALUES
+	(
+		  (SELECT serial_id FROM bookings WHERE serial_id=1)
+		, (SELECT serial_id FROM resources WHERE name='Alina')
+	)
