@@ -1,15 +1,31 @@
 from dataclasses import dataclass
+from typing import Optional
+
 from sqlalchemy import text
 
 from result import Result, Ok, Err
+
 
 @dataclass
 class Resource:
     name: str
     uuid_full: str
+    booked: Optional[bool] = False
 
     def __post_init__(self):
+        self.uuid_full = str(self.uuid_full)
         self.uuid = self.uuid_full[:6]
+
+        # We need this for the html-template since checkboxes are annoying
+        self.checked = "checked" if self.booked else ""
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        uuid_full = d.uuid_id
+        name = d.name
+        booked = d.booked
+
+        return Resource(name, uuid_full, booked)
     
     
 class Resources:
@@ -26,5 +42,7 @@ class Resources:
             case Err(msg):
                 print(f"Error: {msg}")
                 return []
+
+    
 
     

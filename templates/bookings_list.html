@@ -23,7 +23,7 @@
 			<span class="item">{{booking.description}}</span>
 			<input class="item" type="datetime-local" value="{{booking.start}}" readonly />
 			<input class="item" type="datetime-local" value="{{booking.end}}" readonly />
-			<a class="item" href="/bookings/edit/{{booking.uuid_id}}">edit</a>
+			<a class="item" href="/bookings/edit/{{booking.uuid}}">edit</a>
 		</div>
 		{% endfor %}
 	</div>
