@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
+from typing import Optional, cast
 from sqlalchemy import text
 
 from result import Result, Ok, Err
-from maybe import Nothing, Some, Maybe
+from maybe import Maybe, Some, Nothing
 
 from resource import Resource
+
 
 @dataclass
 class Booking:
@@ -13,28 +17,31 @@ class Booking:
     title: str
     resources: list[Resource]
 
+    uuid: str | None = None
+
     def __post_init__(self):
         self.uuid_full = str(self.uuid_full)
         self.uuid = self.uuid_full[:6]
 
     @classmethod
-    def from_dict(cls, d: dict):
-        serial_id = d.serial_id
-        uuid_full = d.uuid_id
-        title = d.title if d.title is not None else ""
-        resources = []
+    def from_dict(cls, d: dict[str, str | int | None]):
+        serial_id: int = cast(int, d["serial_id"])
+        uuid_full: str = cast(str, d["uuid_id"])
+        title: str = cast(str, d["title"] if d["title"] is not None else "")
+        resources: list[Resource] = []
 
         return Booking(serial_id, uuid_full, title, resources)
-        
-    
-    
+
+
 class Bookings:
     def __init__(self, database):
         self.database = database
 
     def list(self) -> list[Booking]:
         """Fetch bookings from database"""
-        match self.database.fetch(text("SELECT serial_id, uuid_id, title FROM bookings")):
+        match self.database.fetch(
+            text("SELECT serial_id, uuid_id, title FROM bookings")
+        ):
             case Ok(data):
                 return [Booking.from_dict(row) for row in data]
 
@@ -44,27 +51,30 @@ class Bookings:
 
     def find(self, booking_id: str) -> Maybe[Booking]:
         """Find a booking with given id"""
-        match self.database.fetch(text(
-            "SELECT serial_id, uuid_id, title, description, user, start_time, end_time FROM bookings WHERE uuid_id=:id"
+        match self.database.fetch(
+            text(
+                "SELECT serial_id, uuid_id, title, description, user, start_time, end_time FROM bookings WHERE uuid_id=:id"
             ),
             {"id": booking_id},
-            single=True
-            ):
+            single=True,
+        ):
             case Ok(result):
                 return Some(Booking.from_dict(result))
 
             case Err(msg):
                 return Nothing()
-    
+
     type ResourceList = list[Resource]
+
     def get_resources(self, serial_id: str) -> Maybe[ResourceList]:
         """Find a booking with given id"""
-        match self.database.fetch(text(
-            # Select uuid_id and name from resource
-            # and add a column indicating whether the 
-            # resource_id is found in the resource_bookings
-            # that have booking_id matching the given serial_id
-            """
+        match self.database.fetch(
+            text(
+                # Select uuid_id and name from resource
+                # and add a column indicating whether the
+                # resource_id is found in the resource_bookings
+                # that have booking_id matching the given serial_id
+                """
             SELECT 
                 resources.uuid_id, resources.name, 
                 (resources.serial_id IN 
@@ -75,17 +85,18 @@ class Bookings:
             """
             ),
             {"id": serial_id},
-            ):
+        ):
             case Ok(result):
                 print(result)
                 return Some([Resource.from_dict(row) for row in result])
 
-            case Err(msg):
+            case Err(msg: str):
                 print(f"No resources found for '{serial_id}'")
-                return Nothing
-    
+                return Nothing()
 
-    def edit(self, booking_id):
+        return Nothing()
+
+    def edit(self, booking_id: int) -> Maybe[Booking]:
         """Edit a booking"""
         match self.find(booking_id):
             case Some(booking):
@@ -102,10 +113,8 @@ class Bookings:
             case Nothing():
                 print("Booking not found")
 
-        return Nothing
-    
+        return Nothing()
 
-    
     # query = text("SELECT uuid_id, name FROM resources")
     # res = db.session.execute(query)
     # resource_ids = res.fetchall()
